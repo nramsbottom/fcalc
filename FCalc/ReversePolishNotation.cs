@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -13,25 +14,47 @@ namespace FCalc
         {
             int position = 0;
             char c;
+            var output = new Stack<string>();
             do
             {
                 c = expression[position];
                 if (IsOperator(c))
                 {
                     // pop two operands from the stack 
+                    var op = c;
+                    var operand2 = int.Parse(output.Pop()); // TODO: improve this
+                    var operand1 = int.Parse(output.Pop());
+                    double result;
+
                     // evaluate
+                    switch(op)
+                    {
+                        case '+':
+                            result = operand1+ operand2;
+                            break;
+                        case '*':
+                            result = operand1 * operand2;
+                            break;
+
+                        default:
+                            throw new NotImplementedException($"The specified operator '{op}' has not been implemented.");
+                    }
+
                     // push result
+                    output.Push(result.ToString());
                 }
                 else
                 {
                     // read until whitespace and place on stack
                     var operand = ReadOperand(position, expression);
+                    output.Push(operand);
                     position += operand.Length;
                 }
+                position++;
             } while (position < expression.Length);
 
 
-            return 0;
+            return int.Parse(output.Pop());
         }
 
         private static bool IsOperator(char c)
@@ -44,6 +67,7 @@ namespace FCalc
         /// </summary>
         private static string ReadOperand(int startIndex, string text)
         {
+            // TODO: This only handles whole numbers.
             var index = startIndex;
             var output = string.Empty;
             do

@@ -20,30 +20,21 @@ namespace FCalc
                 c = expression[position];
                 if (IsOperator(c))
                 {
-                    // pop two operands from the stack 
                     var op = c;
+
+                    // pop two operands from the stack 
                     var operand2 = output.Pop();
                     var operand1 = output.Pop();
-                    int result;
 
                     // evaluate
-                    switch (op)
+                    var result = op switch
                     {
-                        case '+':
-                            result = operand1 + operand2;
-                            break;
-                        case '*':
-                            result = operand1 * operand2;
-                            break;
-                        case '-':
-                            result = operand1 - operand2;
-                            break;
-                        case '/':
-                            result = operand1 / operand2;
-                            break;
-                        default:
-                            throw new NotImplementedException($"The specified operator '{op}' has not been implemented.");
-                    }
+                        '+' => operand1 + operand2,
+                        '*' => operand1 * operand2,
+                        '-' => operand1 - operand2,
+                        '/' => operand1 / operand2,
+                        _ => throw new NotImplementedException($"The specified operator '{op}' has not been implemented."),
+                    };
 
                     // push result
                     output.Push(result);

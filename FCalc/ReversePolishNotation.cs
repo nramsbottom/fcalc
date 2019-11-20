@@ -8,6 +8,7 @@ namespace FCalc
 {
     public class ReversePolishNotation
     {
+        // TODO: Change this to a dictionary of functions instead. Reduces duplication in the evaluations step.
         static readonly char[] SupportedOperators = new char[] { '+', '-', '*', '/' };
 
         public static int Evaluate(string expression)
@@ -22,7 +23,7 @@ namespace FCalc
                 {
                     var op = c;
 
-                    // pop two operands from the stack 
+                    // pop operands from the stack 
                     var operand2 = output.Pop();
                     var operand1 = output.Pop();
 
@@ -36,7 +37,7 @@ namespace FCalc
                         _ => throw new NotImplementedException($"The specified operator '{op}' has not been implemented."),
                     };
 
-                    // push result
+                    // push result back to the stack
                     output.Push(result);
                 }
                 else if (c == ' ')

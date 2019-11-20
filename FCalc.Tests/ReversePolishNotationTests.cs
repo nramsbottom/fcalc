@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FCalc.Tests
 {
@@ -20,6 +21,15 @@ namespace FCalc.Tests
             int output = ReversePolishNotation.Evaluate(input);
 
             Assert.AreEqual(expectedOutput, output);
+        }
+
+        [DataRow("abc")]
+        [DataRow("1 a +")]
+        [DataRow("1 1 a")]
+        [TestMethod]
+        public void WhenEvaluate_InvalidExpression_ThrowsException(string input)
+        {
+            Assert.ThrowsException<FormatException>(() => ReversePolishNotation.Evaluate(input));
         }
     }
 }

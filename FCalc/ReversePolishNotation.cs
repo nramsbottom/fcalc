@@ -10,7 +10,7 @@ namespace FCalc
     {
         static readonly char[] SupportedOperators = new char[] { '+', '-', '*', '/' };
 
-        public static double Evaluate(string expression)
+        public static int Evaluate(string expression)
         {
             int position = 0;
             char c;
@@ -22,26 +22,35 @@ namespace FCalc
                 {
                     // pop two operands from the stack 
                     var op = c;
-                    var operand2 = int.Parse(output.Pop()); // TODO: improve this
+                    var operand2 = int.Parse(output.Pop());
                     var operand1 = int.Parse(output.Pop());
                     double result;
 
                     // evaluate
-                    switch(op)
+                    switch (op)
                     {
                         case '+':
-                            result = operand1+ operand2;
+                            result = operand1 + operand2;
                             break;
                         case '*':
                             result = operand1 * operand2;
                             break;
-
+                        case '-':
+                            result = operand1 - operand2;
+                            break;
+                        case '/':
+                            result = operand1 / operand2;
+                            break;
                         default:
                             throw new NotImplementedException($"The specified operator '{op}' has not been implemented.");
                     }
 
                     // push result
                     output.Push(result.ToString());
+                }
+                else if (c == ' ')
+                {
+                    // ignore whitespace
                 }
                 else
                 {

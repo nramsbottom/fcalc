@@ -13,11 +13,11 @@ namespace FCalc.Tests
         [DataRow("10 10 -", 0)]
         [DataRow("10 10 /", 1)]
         [DataRow("10 10 *", 100)]
-        [DataRow("15 7 1 1 + - / 3 * 2 1 1 + + -", 5D)]
+        [DataRow("15 7 1 1 + - / 3 * 2 1 1 + + -", 5)]
         [TestMethod]
-        public void WhenEvaluate_ValidExpression_Returns_CorrectResult(string input, double expectedOutput)
+        public void WhenEvaluate_ValidExpression_Returns_CorrectResult(string input, int expectedOutput)
         {
-            double output = ReversePolishNotation.Evaluate(input);
+            int output = ReversePolishNotation.Evaluate(input);
 
             Assert.AreEqual(expectedOutput, output);
         }

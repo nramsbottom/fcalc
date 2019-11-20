@@ -14,7 +14,7 @@ namespace FCalc
         {
             int position = 0;
             char c;
-            var output = new Stack<string>();
+            var output = new Stack<int>();
             do
             {
                 c = expression[position];
@@ -22,9 +22,9 @@ namespace FCalc
                 {
                     // pop two operands from the stack 
                     var op = c;
-                    var operand2 = int.Parse(output.Pop());
-                    var operand1 = int.Parse(output.Pop());
-                    double result;
+                    var operand2 = output.Pop();
+                    var operand1 = output.Pop();
+                    int result;
 
                     // evaluate
                     switch (op)
@@ -46,7 +46,7 @@ namespace FCalc
                     }
 
                     // push result
-                    output.Push(result.ToString());
+                    output.Push(result);
                 }
                 else if (c == ' ')
                 {
@@ -56,14 +56,14 @@ namespace FCalc
                 {
                     // read until whitespace and place on stack
                     var operand = ReadOperand(position, expression);
-                    output.Push(operand);
+                    output.Push(int.Parse(operand));
                     position += operand.Length;
                 }
                 position++;
             } while (position < expression.Length);
 
 
-            return int.Parse(output.Pop());
+            return output.Pop();
         }
 
         private static bool IsOperator(char c)

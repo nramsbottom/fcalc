@@ -1,7 +1,7 @@
 
 # FCalc
 
-# Limitations
+## Limitations
 
 * All operands must be whole numbers.
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FCalc.Tests
+namespace FCalcLib.Tests
 {
     [TestClass]
     public class ShuntingYardAlgorithmTests

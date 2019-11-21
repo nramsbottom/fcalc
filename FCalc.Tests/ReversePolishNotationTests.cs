@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace FCalc.Tests
+namespace FCalcLib.Tests
 {
     [TestClass]
     public class ReversePolishNotationTests

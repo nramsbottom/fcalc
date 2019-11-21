@@ -1,6 +1,7 @@
-﻿using System;
+﻿using FCalcLib;
+using System;
 
-namespace FCalc
+namespace FCalcCli
 {
     class Program
     {
@@ -30,5 +31,4 @@ namespace FCalc
             return input;
         }
     }
-
 }

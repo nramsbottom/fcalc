@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace FCalc
+namespace FCalcLib
 {
     public class ShuntingYardAlgorithm
     {

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace FCalc
+namespace FCalcLib
 {
     public class ReversePolishNotation
     {

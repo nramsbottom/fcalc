@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FCalc\FCalc.csproj" />
+    <ProjectReference Include="..\FCalc\FCalcLib.csproj" />
   </ItemGroup>
 
 </Project>

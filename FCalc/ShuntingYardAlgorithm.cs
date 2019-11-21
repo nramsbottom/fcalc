@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace FCalcLib
 {
-    public class ShuntingYardAlgorithm
+    public static class ShuntingYardAlgorithm
     {
         private enum Operator
         {
@@ -27,20 +28,20 @@ namespace FCalcLib
 
         public static string Convert(string infixExpresssion)
         {
-            int position = 0;
-
-            var outQueue = new Queue<string>();
-            var opStack = new Stack<char>();
+            
+            var outputQueue = new Queue<string>();
+            var operatorStack = new Stack<char>();
+            var expressionPosition = 0;
 
             do
             {
-                char c = infixExpresssion[position];
+                char c = infixExpresssion[expressionPosition];
 
                 if (char.IsDigit(c))
                 {
-                    var s = ReadOperand(position, infixExpresssion);
-                    outQueue.Enqueue(s);
-                    position += s.Length;
+                    var s = ReadOperand(expressionPosition, infixExpresssion);
+                    outputQueue.Enqueue(s);
+                    expressionPosition += s.Length;
                     continue;
                 }
                 else if (c == ' ')
@@ -53,55 +54,56 @@ namespace FCalcLib
                     {
                         var op = Operators[c];
 
-                        if (opStack.Any() && Operators[opStack.Peek()] > op && opStack.Peek() != '(')
+                        if (operatorStack.Any() && Operators[operatorStack.Peek()] > op && operatorStack.Peek() != '(')
                         {
                             // pop operators all to output queue
                             // until we find an operator with a
                             // higher or equal precedence
                             do
                             {
-                                outQueue.Enqueue(opStack.Pop().ToString());
+                                outputQueue.Enqueue(operatorStack.Pop().ToString());
                             }
-                            while (opStack.Any());
+                            while (operatorStack.Any());
                         }
                         else if (op == Operator.LeftParen)
-                            opStack.Push(c);
+                            operatorStack.Push(c);
                         else if (op == Operator.RightParen)
                         {
-                            while (opStack.Peek() != '(')
+                            while (operatorStack.Peek() != '(')
                             {
-                                var y = opStack.Pop().ToString();
-                                outQueue.Enqueue(y);
+                                var y = operatorStack.Pop().ToString();
+                                outputQueue.Enqueue(y);
                             }
-                            opStack.Pop(); // and pop the left paren
+                            operatorStack.Pop(); // and pop the left paren
                         }
                         else
                         {
-                            opStack.Push(c);
+                            operatorStack.Push(c);
                         }
                     }
                     // ignore
                 }
 
-                position++;
-            } while (position < infixExpresssion.Length);
+                expressionPosition++;
+            } while (expressionPosition < infixExpresssion.Length);
 
             // push all remaining operators to the output queue
-            while (opStack.Any())
+            while (operatorStack.Any())
             {
-                outQueue.Enqueue(opStack.Pop().ToString());
+                outputQueue.Enqueue(operatorStack.Pop().ToString());
             }
 
-            var x = string.Empty;
+            // convert the output queue to a string
+            var output = new StringBuilder();
             
-            while (outQueue.Any())
+            while (outputQueue.Any())
             {
-                x += outQueue.Dequeue();
-                if (outQueue.Any())
-                    x += " ";
+                output.Append(outputQueue.Dequeue());
+                if (outputQueue.Any())
+                    output.Append(" ");
             }
 
-            return x;
+            return output.ToString();
         }
 
         private static string ReadOperand(int startIndex, string text)

@@ -1,6 +1,9 @@
 
 # FCalc
 
+# Limitations
+
+* All operands must be whole numbers.
 
 ## References
 * [Shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)

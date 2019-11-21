@@ -41,6 +41,7 @@ namespace FCalc
                     var s = ReadOperand(position, infixExpresssion);
                     outQueue.Enqueue(s);
                     position += s.Length;
+                    continue;
                 }
                 else if (c == ' ')
                 {
@@ -86,18 +87,19 @@ namespace FCalc
             } while (position < infixExpresssion.Length);
 
             // push all remaining operators to the output queue
-            do
+            while (opStack.Any())
             {
                 outQueue.Enqueue(opStack.Pop().ToString());
-            } while (opStack.Any());
+            }
 
             var x = string.Empty;
-            do
+            
+            while (outQueue.Any())
             {
                 x += outQueue.Dequeue();
                 if (outQueue.Any())
                     x += " ";
-            } while (outQueue.Any());
+            }
 
             return x;
         }

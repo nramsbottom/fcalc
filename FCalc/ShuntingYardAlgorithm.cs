@@ -7,6 +7,8 @@ namespace FCalc
     {
         private enum Operator
         {
+            RightParen = 5,
+            LeftParen = 4,
             Multiply = 3,
             Divide = 2,
             Subtract = 1,
@@ -15,6 +17,8 @@ namespace FCalc
 
         static readonly Dictionary<char, Operator> Operators = new Dictionary<char, Operator>()
         {
+            { ')', Operator.RightParen },
+            { '(', Operator.LeftParen },
             { '*', Operator.Multiply },
             { '/', Operator.Divide},
             { '-', Operator.Subtract},
@@ -48,8 +52,7 @@ namespace FCalc
                     {
                         var op = Operators[c];
 
-                        // is operator stack empty?
-                        if (opStack.Any() && Operators[opStack.Peek()] > op)
+                        if (opStack.Any() && Operators[opStack.Peek()] > op && opStack.Peek() != '(')
                         {
                             // pop operators all to output queue
                             // until we find an operator with a
@@ -59,6 +62,17 @@ namespace FCalc
                                 outQueue.Enqueue(opStack.Pop().ToString());
                             }
                             while (opStack.Any());
+                        }
+                        else if (op == Operator.LeftParen)
+                            opStack.Push(c);
+                        else if (op == Operator.RightParen)
+                        {
+                            while (opStack.Peek() != '(')
+                            {
+                                var y = opStack.Pop().ToString();
+                                outQueue.Enqueue(y);
+                            }
+                            opStack.Pop(); // and pop the left paren
                         }
                         else
                         {

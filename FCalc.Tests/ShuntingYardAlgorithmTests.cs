@@ -11,6 +11,7 @@ namespace FCalc.Tests
     public class ShuntingYardAlgorithmTests
     {
         [DataRow("1 + 1", "1 1 +")]
+        [DataRow("3 + 4", "3 4 +")]
         [TestMethod]
         public void WhenConvert_ValidExpression_Returns_CorrectResult(string input, string expectedOutput)
         {

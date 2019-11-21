@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FCalc", "FCalc\FCalc.csproj", "{19E7C4EB-5D83-4948-9C2D-465557633E04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCalc.Tests", "FCalc.Tests\FCalc.Tests.csproj", "{DC866628-600E-4CAD-B8CD-08A4643F58D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FCalc.Tests", "FCalc.Tests\FCalc.Tests.csproj", "{DC866628-600E-4CAD-B8CD-08A4643F58D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B88C928B-490F-47BE-84FE-C788617BEAE6}"
+	ProjectSection(SolutionItems) = preProject
+		README.MD = README.MD
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

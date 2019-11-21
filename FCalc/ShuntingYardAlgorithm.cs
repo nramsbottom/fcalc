@@ -1,17 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FCalc
 {
     public class ShuntingYardAlgorithm
     {
+        private enum Operator
+        {
+            Multiply = 3,
+            Divide = 2,
+            Subtract = 1,
+            Add = 0
+        }
+
+        static readonly Dictionary<char, Operator> Operators = new Dictionary<char, Operator>()
+        {
+            { '*', Operator.Multiply },
+            { '/', Operator.Divide},
+            { '-', Operator.Subtract},
+            { '+', Operator.Add },
+        };
+
         public static string Convert(string infixExpresssion)
         {
             int position = 0;
 
-            var output = new Stack<string>();
-            var operators = new Stack<Operator>();
+            var outQueue = new Queue<string>();
+            var opStack = new Stack<char>();
 
             do
             {
@@ -20,7 +35,7 @@ namespace FCalc
                 if (char.IsDigit(c))
                 {
                     var s = ReadOperand(position, infixExpresssion);
-                    output.Push(s);
+                    outQueue.Enqueue(s);
                     position += s.Length;
                 }
                 else if (c == ' ')
@@ -29,30 +44,46 @@ namespace FCalc
                 }
                 else
                 {
-                    switch (c)
+                    if (Operators.ContainsKey(c))
                     {
-                        case '(':
-                            operators.Push(Operator.LeftParen);
-                            break;
-                        case ')':
-                            operators.Push(Operator.RightParen);
-                            break;
-                        case '+':
-                            operators.Push(Operator.Addition);
-                            break;
-                        default:
-                            throw new NotImplementedException();
+                        var op = Operators[c];
+
+                        // is operator stack empty?
+                        if (opStack.Any() && Operators[opStack.Peek()] > op)
+                        {
+                            // pop operators all to output queue
+                            // until we find an operator with a
+                            // higher or equal precedence
+                            do
+                            {
+                                outQueue.Enqueue(opStack.Pop().ToString());
+                            }
+                            while (opStack.Any());
+                        }
+                        else
+                        {
+                            opStack.Push(c);
+                        }
                     }
+                    // ignore
                 }
 
                 position++;
             } while (position < infixExpresssion.Length);
 
+            // push all remaining operators to the output queue
+            do
+            {
+                outQueue.Enqueue(opStack.Pop().ToString());
+            } while (opStack.Any());
+
             var x = string.Empty;
             do
             {
-                x += output.Pop() + " ";
-            } while (output.Count > 0);
+                x += outQueue.Dequeue();
+                if (outQueue.Any())
+                    x += " ";
+            } while (outQueue.Any());
 
             return x;
         }
@@ -71,12 +102,7 @@ namespace FCalc
             } while (index < text.Length);
             return output;
         }
-        
-        private enum Operator
-        {
-            LeftParen,
-            RightParen,
-            Addition
-        }
+
+
     }
 }

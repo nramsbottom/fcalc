@@ -18,7 +18,6 @@ namespace FCalcLib.Tests
         [DataRow("3 + 4", "3 4 +")]
         [DataRow("( 1 + 2 ) * 3", "1 2 + 3 *")]
         [DataRow("(1+2) * 3", "1 2 + 3 *")]
-        //[DataRow("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3", "3 4 2 * 1 5 - 2 3 ^ ^ / +")]
         [DataRow("3 + 4 * 2 / ( 1 - 5 )", "3 4 2 * 1 5 - / +")]
         [TestMethod]
         public void WhenConvert_ValidExpression_Returns_CorrectResult(string input, string expectedOutput)
@@ -26,6 +25,14 @@ namespace FCalcLib.Tests
             var output = ShuntingYardAlgorithm.Convert(input);
 
             Assert.AreEqual(expectedOutput, output);
+        }
+
+        [DataRow("hello world")]
+        [DataRow("12 + abc")]
+        [TestMethod]
+        public void WhenConvert_InvalidExpression_ThrowsException(string input)
+        {
+            Assert.ThrowsException<FormatException>(() => ShuntingYardAlgorithm.Convert(input));
         }
     }
 }

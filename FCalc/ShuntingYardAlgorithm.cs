@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -28,7 +29,6 @@ namespace FCalcLib
 
         public static string Convert(string infixExpresssion)
         {
-            
             var outputQueue = new Queue<string>();
             var operatorStack = new Stack<char>();
             var expressionPosition = 0;
@@ -44,44 +44,45 @@ namespace FCalcLib
                     expressionPosition += s.Length;
                     continue;
                 }
+                else if (Operators.ContainsKey(c))
+                {
+                    var op = Operators[c];
+
+                    if (operatorStack.Any() && Operators[operatorStack.Peek()] > op && operatorStack.Peek() != '(')
+                    {
+                        // pop operators all to output queue
+                        // until we find an operator with a
+                        // higher or equal precedence
+                        do
+                        {
+                            outputQueue.Enqueue(operatorStack.Pop().ToString());
+                        }
+                        while (operatorStack.Any());
+                    }
+                    else if (op == Operator.LeftParen)
+                        operatorStack.Push(c);
+                    else if (op == Operator.RightParen)
+                    {
+                        while (operatorStack.Peek() != '(')
+                        {
+                            var y = operatorStack.Pop().ToString();
+                            outputQueue.Enqueue(y);
+                        }
+                        operatorStack.Pop(); // and pop the left paren
+                    }
+                    else
+                    {
+                        operatorStack.Push(c);
+                    }
+
+                }
                 else if (c == ' ')
                 {
                     // ignore
                 }
                 else
                 {
-                    if (Operators.ContainsKey(c))
-                    {
-                        var op = Operators[c];
-
-                        if (operatorStack.Any() && Operators[operatorStack.Peek()] > op && operatorStack.Peek() != '(')
-                        {
-                            // pop operators all to output queue
-                            // until we find an operator with a
-                            // higher or equal precedence
-                            do
-                            {
-                                outputQueue.Enqueue(operatorStack.Pop().ToString());
-                            }
-                            while (operatorStack.Any());
-                        }
-                        else if (op == Operator.LeftParen)
-                            operatorStack.Push(c);
-                        else if (op == Operator.RightParen)
-                        {
-                            while (operatorStack.Peek() != '(')
-                            {
-                                var y = operatorStack.Pop().ToString();
-                                outputQueue.Enqueue(y);
-                            }
-                            operatorStack.Pop(); // and pop the left paren
-                        }
-                        else
-                        {
-                            operatorStack.Push(c);
-                        }
-                    }
-                    // ignore
+                    throw new FormatException($"Invalid character '{c}' in expression.");
                 }
 
                 expressionPosition++;
@@ -95,7 +96,7 @@ namespace FCalcLib
 
             // convert the output queue to a string
             var output = new StringBuilder();
-            
+
             while (outputQueue.Any())
             {
                 output.Append(outputQueue.Dequeue());

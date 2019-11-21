@@ -1,44 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace FCalcLib
 {
-    public class ReversePolishNotation
+    public static class ReversePolishNotation
     {
-        // TODO: Change this to a dictionary of functions instead. Reduces duplication in the evaluations step.
-        static readonly char[] SupportedOperators = new char[] { '+', '-', '*', '/' };
+        static readonly Dictionary<char, Func<int, int, int>> Operators = new Dictionary<char, Func<int, int, int>>()
+        {
+            { '*', (operand1, operand2) => operand1 * operand2  },
+            { '/', (operand1, operand2) => operand1 / operand2  },
+            { '-', (operand1, operand2) => operand1 - operand2  },
+            { '+', (operand1, operand2) => operand1 + operand2  }
+        };
 
         public static int Evaluate(string expression)
         {
             int position = 0;
             char c;
             var output = new Stack<int>();
+
             do
             {
                 c = expression[position];
-                if (IsOperator(c))
+                if (Operators.ContainsKey(c))
                 {
-                    var op = c;
-
-                    // pop operands from the stack 
+                    var currentOperator = c;
                     var operand2 = output.Pop();
                     var operand1 = output.Pop();
-
-                    // evaluate
-                    var result = op switch
-                    {
-                        '+' => operand1 + operand2,
-                        '*' => operand1 * operand2,
-                        '-' => operand1 - operand2,
-                        '/' => operand1 / operand2,
-                        _ => throw new NotImplementedException($"The specified operator '{op}' has not been implemented."),
-                    };
+                    var result = Operators[currentOperator](operand1, operand2);
 
                     // push result back to the stack
                     output.Push(result);
+                }
+                else if (char.IsDigit(c))
+                {
+                    var operand = ReadOperand(position, expression);
+                    output.Push(int.Parse(operand));
+                    position += operand.Length;
+                    continue;
                 }
                 else if (c == ' ')
                 {
@@ -46,21 +45,14 @@ namespace FCalcLib
                 }
                 else
                 {
-                    // read until whitespace and place on stack
-                    var operand = ReadOperand(position, expression);
-                    output.Push(int.Parse(operand));
-                    position += operand.Length;
+                    throw new FormatException($"Invalid character '{c}' in expression.");
                 }
+
                 position++;
             } while (position < expression.Length);
 
 
             return output.Pop();
-        }
-
-        private static bool IsOperator(char c)
-        {
-            return SupportedOperators.Contains(c);
         }
 
         /// <summary>

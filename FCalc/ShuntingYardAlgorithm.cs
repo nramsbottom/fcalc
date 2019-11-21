@@ -27,6 +27,9 @@ namespace FCalcLib
             { '+', Operator.Add },
         };
 
+        /// <summary>
+        /// Converts the given infix expression to postfix (Reverse Polish Notiation)
+        /// </summary>
         public static string Convert(string infixExpresssion)
         {
             var outputQueue = new Queue<string>();
@@ -46,39 +49,41 @@ namespace FCalcLib
                 }
                 else if (Operators.ContainsKey(c))
                 {
-                    var op = Operators[c];
+                    var currentOperator = Operators[c];
 
-                    if (operatorStack.Any() && Operators[operatorStack.Peek()] > op && operatorStack.Peek() != '(')
+                    if (operatorStack.Any() && Operators[operatorStack.Peek()] > currentOperator && operatorStack.Peek() != '(')
                     {
-                        // pop operators all to output queue
-                        // until we find an operator with a
-                        // higher or equal precedence
-                        do
+                        // pop operators all to output queue until we find an 
+                        // operator with a higher precedence
+                        while (operatorStack.Any() && Operators[operatorStack.Peek()] > currentOperator)
                         {
                             outputQueue.Enqueue(operatorStack.Pop().ToString());
                         }
-                        while (operatorStack.Any());
                     }
-                    else if (op == Operator.LeftParen)
-                        operatorStack.Push(c);
-                    else if (op == Operator.RightParen)
+                    else if (currentOperator == Operator.LeftParen)
                     {
+                        operatorStack.Push(c);
+                    }
+                    else if (currentOperator == Operator.RightParen)
+                    {
+                        // remove all operators back to the last left paren then
+                        // remove the left paren itself
                         while (operatorStack.Peek() != '(')
                         {
-                            var y = operatorStack.Pop().ToString();
-                            outputQueue.Enqueue(y);
+                            outputQueue.Enqueue(operatorStack.Pop().ToString());
                         }
-                        operatorStack.Pop(); // and pop the left paren
+                        operatorStack.Pop();
                     }
                     else
                     {
+                        // all other operators go straight on the stack
                         operatorStack.Push(c);
                     }
 
                 }
                 else if (c == ' ')
                 {
-                    // ignore
+                    // ignore spaces
                 }
                 else
                 {

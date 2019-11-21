@@ -18,6 +18,7 @@ namespace FCalcLib.Tests
         [DataRow("3 + 4", "3 4 +")]
         [DataRow("( 1 + 2 ) * 3", "1 2 + 3 *")]
         [DataRow("(1+2) * 3", "1 2 + 3 *")]
+        [DataRow("3 + 4 * 2", "3 4 2 * +")]
         [DataRow("3 + 4 * 2 / ( 1 - 5 )", "3 4 2 * 1 5 - / +")]
         [TestMethod]
         public void WhenConvert_ValidExpression_Returns_CorrectResult(string input, string expectedOutput)
